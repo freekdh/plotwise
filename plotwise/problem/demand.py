@@ -6,7 +6,11 @@ from warnings import warn
 import math
 import re
 
-Coordinate = namedtuple("Coordinate", "x y")
+
+@dataclass(frozen=True, eq=False)
+class Coordinate:
+    x: int
+    y: int
 
 
 class DemandFileLoader:
@@ -38,6 +42,12 @@ class DemandFileLoader:
 class Demand:
     deliveries: Set[Coordinate]
     pickups: Set[Coordinate]
+
+    def has_delivery_event(self, x: int, y: int) -> bool:
+        return any(delivery.x == x and delivery.y == y for delivery in self.deliveries)
+
+    def has_pickup_event(self, x: int, y: int) -> bool:
+        return any(pickup.x == x and pickup.y == y for pickup in self.pickups)
 
     @classmethod
     def from_file_50_50(cls, file_path: str) -> "Demand":

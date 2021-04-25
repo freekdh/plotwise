@@ -20,7 +20,9 @@ def test_demand(example_demand):
 )
 def test_demand_from_file_deliveries(file_path, expected_n_deliveries):
     demand_from_file = Demand.from_file_50_50(file_path=file_path)
-    assert len(set(demand_from_file.deliveries)) == expected_n_deliveries
+    deliveries = set(demand_from_file.deliveries)
+    assert len(deliveries) == expected_n_deliveries
+    assert demand_from_file.has_delivery_event(x=10, y=137)
 
 
 @pytest.mark.parametrize(
@@ -29,4 +31,6 @@ def test_demand_from_file_deliveries(file_path, expected_n_deliveries):
 )
 def test_demand_from_file_pickups(file_path, expected_n_pickups):
     demand_from_file = Demand.from_file_50_50(file_path)
-    assert len(set(demand_from_file.pickups)) == expected_n_pickups
+    pickups = set(demand_from_file.pickups)
+    assert len(pickups) == expected_n_pickups
+    assert demand_from_file.has_pickup_event(x=4, y=23)
