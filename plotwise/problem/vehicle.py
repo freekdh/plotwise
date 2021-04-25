@@ -3,4 +3,4 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class Vehicle:
-    capacity_limit: int
+    capacity_limit: float

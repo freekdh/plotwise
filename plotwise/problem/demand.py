@@ -13,6 +13,20 @@ class Coordinate:
     y: int
 
 
+@dataclass(frozen=True, eq=False)
+class Event:
+    coordinate: Coordinate
+    capacity: float
+
+    @property
+    def x(self):
+        return self.coordinate.x
+
+    @property
+    def y(self):
+        return self.coordinate.y
+
+
 class DemandFileLoader:
     def __init__(self, file_path: str, from_line=9):
         """Load from file the events, starting from line 'from_line'
@@ -25,7 +39,7 @@ class DemandFileLoader:
         self._file_path = file_path
         self._from_line = from_line
 
-    def get_events(self) -> Iterable[Coordinate]:
+    def get_events(self) -> Iterable[Event]:
         with open(self._file_path) as file:
             return [
                 self._get_event(line)
@@ -33,9 +47,10 @@ class DemandFileLoader:
                 if i >= self._from_line
             ]
 
-    def _get_event(self, line: str) -> Coordinate:
+    def _get_event(self, line: str) -> Event:
         customer_number, x, y, demand, read_time, due_date, service_time = line.split()
-        return Coordinate(x=int(x), y=int(y))
+        coordinate = Coordinate(x=int(x), y=int(y))
+        return Event(coordinate=coordinate, capacity=float(demand))
 
 
 @dataclass(frozen=True, eq=False)
