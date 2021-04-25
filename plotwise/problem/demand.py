@@ -7,7 +7,7 @@ import math
 import re
 
 
-@dataclass(frozen=True, eq=False)
+@dataclass(frozen=True)
 class Coordinate:
     x: int
     y: int
