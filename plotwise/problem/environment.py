@@ -5,6 +5,9 @@ from plotwise.problem.demand import Coordinate
 
 
 class ProblemEnvironment:
+    def __init__(self, depot_coordinate=Coordinate(x=0, y=0)):
+        self._depot_coordinate = depot_coordinate
+
     @lru_cache(maxsize=None)
     def get_distance(self, coordinate1: Coordinate, coordinate2: Coordinate) -> float:
         d_x = abs(coordinate1.x - coordinate1.x)
