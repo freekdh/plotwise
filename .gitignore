@@ -2,3 +2,4 @@
 virtualenv/
 *.egg-info/
 
+*.pyc
