@@ -67,7 +67,7 @@ class TSPSolver:
             if i != j:
                 model += y[i] - (n + 1) * x[i][j] >= y[j] - n
 
-        model.optimize()
+        model.optimize(max_seconds=self._max_seconds)
 
         if model.num_solutions:
             yield places[0]

@@ -43,4 +43,4 @@ if __name__ == "__main__":
     tsp_solver = TSPSolver(problem_environment, max_seconds=100)
     solution = tsp_solver.solve(deliveries)
 
-    print(solution.route)
+    route_without_pickup = solution.route
