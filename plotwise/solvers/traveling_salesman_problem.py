@@ -19,9 +19,7 @@ class TSPSolver:
         self._problem_environment = problem_environment
 
     def solve(self, places: Set[Event]) -> TSPSolution:
-        places = [
-            Event(coordinate=self._problem_environment._depot_coordinate, capacity=0)
-        ] + list(places)
+        places = [self._problem_environment.depot] + list(places)
         route = list(self._get_shortest_route(places=places))
         return TSPSolution(route=route)
 

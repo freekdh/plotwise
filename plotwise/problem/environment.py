@@ -1,12 +1,22 @@
+from dataclasses import dataclass
 from typing import Iterable
 from math import sqrt
 from functools import lru_cache
 from plotwise.problem.demand import Coordinate
 
 
+@dataclass(frozen=True)
+class Depot:
+    coordinate: Coordinate
+
+
 class ProblemEnvironment:
     def __init__(self, depot_coordinate=Coordinate(x=0, y=0)):
-        self._depot_coordinate = depot_coordinate
+        self._depot = Depot(coordinate=depot_coordinate)
+
+    @property
+    def depot(self):
+        return self._depot
 
     @lru_cache(maxsize=None)
     def get_distance(self, coordinate1: Coordinate, coordinate2: Coordinate) -> float:

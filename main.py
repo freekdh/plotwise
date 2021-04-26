@@ -1,8 +1,9 @@
 from itertools import takewhile
 
-from plotwise.problem.demand import Demand, Event
+from plotwise.problem.demand import Coordinate, Demand, Event
 from plotwise.problem.vehicle import Vehicle
 from plotwise.problem.environment import ProblemEnvironment
+from plotwise.solvers.traveling_salesman_problem import TSPSolver
 
 
 def get_deliveries_for_vehicle(demand: Demand, vehicle: Vehicle) -> Event:
@@ -33,8 +34,13 @@ if __name__ == "__main__":
     demand = Demand.from_file_50_50(
         file_path="data/homberger_200_customer_instances/C1_2_1.TXT"
     )
-    vehicle = Vehicle(capacity_limit=100)
+    vehicle = Vehicle(capacity_limit=500)
 
     deliveries = set(get_deliveries_for_vehicle(demand, vehicle))
 
-    print(deliveries)
+    problem_environment = ProblemEnvironment(depot_coordinate=Coordinate(0, 0))
+
+    tsp_solver = TSPSolver(problem_environment)
+    solution = tsp_solver.solve(deliveries)
+
+    print(solution.route)
