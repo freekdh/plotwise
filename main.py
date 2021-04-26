@@ -1,4 +1,6 @@
 from itertools import takewhile
+from copy import copy
+from typing import Set, List
 
 from plotwise.problem.demand import Coordinate, Demand, Event
 from plotwise.problem.vehicle import Vehicle
@@ -30,6 +32,39 @@ def get_deliveries_for_vehicle(demand: Demand, vehicle: Vehicle) -> Event:
             return
 
 
+def insert_pickup_event_in_route(
+    current_route: List[Event],
+    pickups: Set[Event],
+    problem_environment: ProblemEnvironment,
+):
+
+    insert_event_in_route_solver = InsertEventInRouteSolver()
+
+    best_route = None
+    best_route_length = None
+    for pickup in pickups:
+        try:
+            route_with_pickup = insert_event_in_route_solver.solve(
+                event=pickup, route=copy(current_route)
+            )
+            if (
+                not best_route_length
+                or (
+                    route_length := problem_environment.get_route_distance(
+                        route_with_pickup
+                    )
+                )
+                < best_route_length
+            ):
+                best_route_length = route_length
+                best_route = route_with_pickup
+
+        except NoSolutionException:
+            pass
+
+    return best_route
+
+
 if __name__ == "__main__":
     demand = Demand.from_file_50_50(
         file_path="data/homberger_200_customer_instances/C1_2_1.TXT"
@@ -40,7 +75,16 @@ if __name__ == "__main__":
 
     problem_environment = ProblemEnvironment(depot_coordinate=Coordinate(0, 0))
 
-    tsp_solver = TSPSolver(problem_environment, max_seconds=100)
+    tsp_solver = TSPSolver(problem_environment, max_seconds=10)
     solution = tsp_solver.solve(deliveries)
 
     route_without_pickup = solution.route
+
+    best_route = insert_pickup_event_in_route(
+        current_route=route_without_pickup, pickups=demand.pickups
+    )
+
+    if best_route:
+        print(f"The proposed route to take is: {best_route}")
+    else:
+        print("Could not insert a pickup in the route")
