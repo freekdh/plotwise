@@ -85,6 +85,6 @@ if __name__ == "__main__":
     )
 
     if best_route:
-        print(f"The proposed route to take is: {best_route}")
+        print(f"The proposed route to take is: {[str(event) for event in best_route]}")
     else:
         print("Could not insert a pickup in the route")

@@ -27,6 +27,18 @@ class Event:
         return self.coordinate.y
 
 
+@dataclass(frozen=True, eq=False)
+class Pickup(Event):
+    def __str__(self):
+        return f"Pickup @({self.x},{self.y})"
+
+
+@dataclass(frozen=True, eq=False)
+class Delivery(Event):
+    def __str__(self):
+        return f"Delivery @({self.x},{self.y})"
+
+
 class DemandFileLoader:
     def __init__(self, file_path: str, from_line=9):
         """Load from file the events, starting from line 'from_line'
@@ -77,10 +89,13 @@ class Demand:
 
         if n_events := len(events):
             n_deliveries = math.ceil(n_events / 2)
-            deliveries = set(events[:n_deliveries])
-            pickups = set(events[n_deliveries:])
+            event_deliveries = set(events[:n_deliveries])
+            event_pickups = set(events[n_deliveries:])
         else:
             warn(f"No events found in {file_path}")
-            deliveries, pickups = {}, {}
+            event_deliveries, event_pickups = {}, {}
+
+        deliveries = {Delivery(**event.__dict__) for event in event_deliveries}
+        pickups = {Pickup(**event.__dict__) for event in event_pickups}
 
         return cls(deliveries=deliveries, pickups=pickups)

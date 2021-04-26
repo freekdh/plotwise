@@ -9,6 +9,7 @@ class InsertEventInRouteSolver:
 
     def solve(self, event: Event, route: List[Event]):
         try:
+            # TODO: check that event does not exceed the capacity of the vehicle. Otherwise raise NoSolution
             return route[:-1] + [event] + [route[-1]]
         except AttributeError:
-            raise NotImplementedError
+            raise NoSolutionException
