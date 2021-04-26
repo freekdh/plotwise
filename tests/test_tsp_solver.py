@@ -18,11 +18,15 @@ def tsp_solver(problem_environment):
 
 
 def test_solve(tsp_solver):
-    location1 = Mock(coordinate=Coordinate(1, 1))
-    location2 = Mock(coordinate=Coordinate(-1, 1))
-    location3 = Mock(coordinate=Coordinate(1, -1))
-    location4 = Mock(coordinate=Coordinate(-1, -1))
-    solution = tsp_solver.solve({location1, location2, location3, location4})
+    n_locations = 10
+    locations = [Mock(coordinate=Coordinate(0, i)) for i in range(n_locations)]
+    solution = tsp_solver.solve(set(locations))
 
-    assert {location1, location2, location3, location4}.issubset(set(solution.route))
-    assert len(solution.route) == 4 + 2  # two for the origin
+    assert set(locations).issubset(set(solution.route))
+    assert len(solution.route) == len(locations) + 2  # two for the origin
+
+    positions = [solution.route.index(location) for location in locations]
+
+    assert positions == [
+        _ + 1 for _ in range(len(solution.route[1:-1]))
+    ] or positions == [_ + 1 for _ in reversed(list(range(len(solution.route[1:-1]))))]
