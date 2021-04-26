@@ -30,13 +30,13 @@ class Event:
 @dataclass(frozen=True, eq=False)
 class Pickup(Event):
     def __str__(self):
-        return f"Pickup @({self.x},{self.y})"
+        return f"Pickup {self.capacity} @({self.x},{self.y})"
 
 
 @dataclass(frozen=True, eq=False)
 class Delivery(Event):
     def __str__(self):
-        return f"Delivery @({self.x},{self.y})"
+        return f"Delivery {self.capacity} @({self.x},{self.y})"
 
 
 class DemandFileLoader:

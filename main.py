@@ -37,11 +37,12 @@ def get_deliveries_for_vehicle(demand: Demand, vehicle: Vehicle) -> Event:
 
 def insert_pickup_event_in_route(
     current_route: List[Event],
+    vehicle: Vehicle,
     pickups: Set[Event],
     problem_environment: ProblemEnvironment,
 ):
 
-    insert_event_in_route_solver = InsertEventInRouteSolver()
+    insert_event_in_route_solver = InsertEventInRouteSolver(vehicle)
 
     best_route = None
     best_route_length = None
@@ -64,17 +65,18 @@ def insert_pickup_event_in_route(
     return best_route
 
 
-def solve(demand, vehicle, problem_environment):
+def solve(demand, vehicle, problem_environment, solver_time_max_seconds=100):
 
     deliveries = set(get_deliveries_for_vehicle(demand, vehicle))
 
-    tsp_solver = TSPSolver(problem_environment, max_seconds=100)
+    tsp_solver = TSPSolver(problem_environment, max_seconds=solver_time_max_seconds)
     solution = tsp_solver.solve(deliveries)
 
     route_without_pickup = solution.route
 
     best_route = insert_pickup_event_in_route(
         current_route=route_without_pickup,
+        vehicle=vehicle,
         pickups=demand.pickups,
         problem_environment=problem_environment,
     )
@@ -86,15 +88,16 @@ if __name__ == "__main__":
     demand = Demand.from_file_50_50(
         file_path="data/homberger_200_customer_instances/C1_2_1.TXT"
     )
-    vehicle = Vehicle(capacity_limit=100)
+    vehicle = Vehicle(capacity_limit=500)
     problem_environment = ProblemEnvironment(depot_coordinate=Coordinate(0, 0))
 
-    best_route = solve(demand, vehicle, problem_environment)
+    best_route = solve(
+        demand, vehicle, problem_environment, solver_time_max_seconds=100
+    )
 
     if best_route:
         print(f"The proposed route to take is: {[str(event) for event in best_route]}")
+        fig, ax = plot_route(best_route)
+        fig.savefig("route.png")
     else:
         print("Could not insert a pickup in the route")
-
-    fig, ax = plot_route(best_route)
-    fig.savefig("test.png")

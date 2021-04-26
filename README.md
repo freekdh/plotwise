@@ -8,3 +8,7 @@ For this problem an event is a location on the plane encoded by their coordinate
 - The length of a route is calculated as the sum of distances between each subsequent event.
 - A delivery is loaded onto the vehicle at the first depot and dropped off at its specified location. A pickup, conversely, is loaded at its specified location and unloaded upon returning to the depot.
 - The twist: you should visit as many delivery events as possible but only one (1) pickup event of your choice!
+
+## Workflow:
+- pytest for testing
+- black for formatting

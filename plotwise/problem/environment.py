@@ -9,6 +9,9 @@ from plotwise.problem.demand import Coordinate, Event
 class Depot:
     coordinate: Coordinate
 
+    def __str__(self):
+        return f"Depot @({self.coordinate.x},{self.coordinate.y})"
+
 
 class ProblemEnvironment:
     def __init__(self, depot_coordinate=Coordinate(x=0, y=0)):
