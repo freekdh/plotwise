@@ -15,8 +15,9 @@ class TSPSolution:
 
 
 class TSPSolver:
-    def __init__(self, problem_environment: ProblemEnvironment):
+    def __init__(self, problem_environment: ProblemEnvironment, max_seconds=100):
         self._problem_environment = problem_environment
+        self._max_seconds = max_seconds
 
     def solve(self, places: Set[Event]) -> TSPSolution:
         places = [self._problem_environment.depot] + list(places)

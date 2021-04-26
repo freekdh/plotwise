@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
     problem_environment = ProblemEnvironment(depot_coordinate=Coordinate(0, 0))
 
-    tsp_solver = TSPSolver(problem_environment)
+    tsp_solver = TSPSolver(problem_environment, max_seconds=100)
     solution = tsp_solver.solve(deliveries)
 
     print(solution.route)
