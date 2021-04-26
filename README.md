@@ -12,3 +12,7 @@ For this problem an event is a location on the plane encoded by their coordinate
 ## Workflow:
 - pytest for testing
 - black for formatting
+
+## Entry point: `main.py`
+
+![route](https://user-images.githubusercontent.com/12398296/116027451-c7af4100-a609-11eb-80fb-4ac0d60f6ed7.png)
