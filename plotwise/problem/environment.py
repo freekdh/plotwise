@@ -1,8 +1,8 @@
 from dataclasses import dataclass
-from typing import Iterable
+from typing import Iterable, List
 from math import sqrt
 from functools import lru_cache
-from plotwise.problem.demand import Coordinate
+from plotwise.problem.demand import Coordinate, Event
 
 
 @dataclass(frozen=True)
@@ -23,3 +23,9 @@ class ProblemEnvironment:
         d_x = abs(coordinate1.x - coordinate1.x)
         d_y = abs(coordinate1.y - coordinate2.y)
         return sqrt(d_x ** 2 + d_y ** 2)
+
+    def get_route_distance(self, route: List[Event]):
+        return sum(
+            self.get_distance(location1.coordinate, location2.coordinate)
+            for location1, location2 in zip(route, route[1:])
+        )

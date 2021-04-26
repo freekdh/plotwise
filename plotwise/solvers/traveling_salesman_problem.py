@@ -7,6 +7,7 @@ from typing import List, Set, Iterable
 from itertools import product
 from plotwise.problem.environment import ProblemEnvironment
 from plotwise.problem.demand import Coordinate, Event
+from .exceptions import NoSolutionException
 
 
 @dataclass(frozen=True)
@@ -80,7 +81,3 @@ class TSPSolver:
             return
         else:
             raise NoSolutionException("Could not find a solution")
-
-
-class NoSolutionException(Exception):
-    pass

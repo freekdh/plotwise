@@ -6,6 +6,8 @@ from plotwise.problem.demand import Coordinate, Demand, Event
 from plotwise.problem.vehicle import Vehicle
 from plotwise.problem.environment import ProblemEnvironment
 from plotwise.solvers.traveling_salesman_problem import TSPSolver
+from plotwise.solvers.insert_event_in_route import InsertEventInRouteSolver
+from plotwise.solvers.exceptions import NoSolutionException
 
 
 def get_deliveries_for_vehicle(demand: Demand, vehicle: Vehicle) -> Event:
@@ -47,18 +49,14 @@ def insert_pickup_event_in_route(
             route_with_pickup = insert_event_in_route_solver.solve(
                 event=pickup, route=copy(current_route)
             )
-            if (
-                not best_route_length
-                or (
-                    route_length := problem_environment.get_route_distance(
-                        route_with_pickup
-                    )
-                )
-                < best_route_length
-            ):
+            route_length = problem_environment.get_route_distance(route_with_pickup)
+            if best_route:
+                if route_length < best_route_length:
+                    best_route_length = route_length
+                    best_route = route_with_pickup
+            else:
                 best_route_length = route_length
                 best_route = route_with_pickup
-
         except NoSolutionException:
             pass
 
@@ -81,7 +79,9 @@ if __name__ == "__main__":
     route_without_pickup = solution.route
 
     best_route = insert_pickup_event_in_route(
-        current_route=route_without_pickup, pickups=demand.pickups
+        current_route=route_without_pickup,
+        pickups=demand.pickups,
+        problem_environment=problem_environment,
     )
 
     if best_route:
