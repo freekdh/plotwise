@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from math import dist
 from mip import Model, xsum, minimize, BINARY, CBC
 from dataclasses import dataclass
 import networkx as nx
@@ -26,9 +27,10 @@ class TSPSolver:
         return TSPSolution(route=route)
 
     def _get_distance(self, location1, location2) -> float:
-        return self._problem_environment.get_distance(
+        distance = self._problem_environment.get_distance(
             location1.coordinate, location2.coordinate
         )
+        return distance
 
     def _get_shortest_route(self, places: List[Event]) -> Iterable[Event]:
         """Solves the TSP using the MIP package
@@ -68,6 +70,7 @@ class TSPSolver:
             if i != j:
                 model += y[i] - (n + 1) * x[i][j] >= y[j] - n
 
+        model.verbose = 0
         model.optimize(max_seconds=self._max_seconds)
 
         if model.num_solutions:
