@@ -8,6 +8,7 @@ from plotwise.problem.environment import ProblemEnvironment
 from plotwise.solvers.traveling_salesman_problem import TSPSolver
 from plotwise.solvers.insert_event_in_route import InsertEventInRouteSolver
 from plotwise.solvers.exceptions import NoSolutionException
+from plotwise.route_plotter import plot_route
 
 
 def get_deliveries_for_vehicle(demand: Demand, vehicle: Vehicle) -> Event:
@@ -63,17 +64,11 @@ def insert_pickup_event_in_route(
     return best_route
 
 
-if __name__ == "__main__":
-    demand = Demand.from_file_50_50(
-        file_path="data/homberger_200_customer_instances/C1_2_1.TXT"
-    )
-    vehicle = Vehicle(capacity_limit=500)
+def solve(demand, vehicle, problem_environment):
 
     deliveries = set(get_deliveries_for_vehicle(demand, vehicle))
 
-    problem_environment = ProblemEnvironment(depot_coordinate=Coordinate(0, 0))
-
-    tsp_solver = TSPSolver(problem_environment, max_seconds=10)
+    tsp_solver = TSPSolver(problem_environment, max_seconds=100)
     solution = tsp_solver.solve(deliveries)
 
     route_without_pickup = solution.route
@@ -84,7 +79,22 @@ if __name__ == "__main__":
         problem_environment=problem_environment,
     )
 
+    return best_route
+
+
+if __name__ == "__main__":
+    demand = Demand.from_file_50_50(
+        file_path="data/homberger_200_customer_instances/C1_2_1.TXT"
+    )
+    vehicle = Vehicle(capacity_limit=100)
+    problem_environment = ProblemEnvironment(depot_coordinate=Coordinate(0, 0))
+
+    best_route = solve(demand, vehicle, problem_environment)
+
     if best_route:
         print(f"The proposed route to take is: {[str(event) for event in best_route]}")
     else:
         print("Could not insert a pickup in the route")
+
+    fig, ax = plot_route(best_route)
+    fig.savefig("test.png")
