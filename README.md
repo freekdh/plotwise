@@ -1,5 +1,3 @@
-# Plotwise assignment
-
 ## Problem description:
 For this problem an event is a location on the plane encoded by their coordinates (x,y). You are given two sets of events D and P, let’s call them the set of deliveries and the set of pickups respectively. You’re task is to create a tool that:
 - Given as input D and P (encoded and inputted however you want) outputs a “reasonably short route”.
